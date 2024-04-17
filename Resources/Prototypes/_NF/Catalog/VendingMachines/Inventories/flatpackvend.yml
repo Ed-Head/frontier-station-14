@@ -2,6 +2,7 @@
   id: FlatpackVendInventory
   startingInventory:
     ShuttleGunKineticFlatpack: 12
+    ComputerCrewMonitoringFlatpack: 12
     OreProcessorFlatpack: 10
     AutolatheFlatpack: 6
     HydroponicsTrayEmptyFlatpack: 16
