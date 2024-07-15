@@ -1,6 +1,11 @@
 uplink-emp-grenade-launcher-bundle-name = EMP China-Lake Bundle
 uplink-emp-grenade-launcher-bundle-desc = An old China-Lake grenade launcher bundled with 8 rounds of EMP.
-
+uplink-iff-flatpack-name = IFF Computer Flatpack
+uplink-iff-flatpack-desc = A Computer that lets you control the IFF characteristics of your ship. Basically necessary for all smugglers.
+uplink-atreides-name = Atreides Bundle
+uplink-atreides-desc = A one-handed smg, a masterclass in lead down range and bundled with 3 magazines.
+uplink-ammofab-flatpack-name = Ammo TechFab Flatpack
+uplink-ammofab-flatpack-desc = Prints the bare minimum of bullets that any budget military or armory could need. Nothing fancy.
 store-category-sechardsuits = EVA Suits
 store-category-secweapons = Weapons
 store-category-secutility = Utility
@@ -151,8 +156,6 @@ uplink-security-emp-ammo-name = EMP Projectile Ammo
 uplink-security-emp-ammo-desc = A a box containing 4 EMP projectile grenades.
 uplink-security-trackingdart-ammo-name = Tracking Darts Ammo
 uplink-security-trackingdart-ammo-desc = A a box containing 4 tracking darts.
-uplink-security-spaceblade-sec-name = Security SpaceBlade
-uplink-security-spaceblade-sec-desc = Latest stun tech
 
 store-category-piratehardsuits = EVA Suits
 store-category-pirateweapons = Weapons
