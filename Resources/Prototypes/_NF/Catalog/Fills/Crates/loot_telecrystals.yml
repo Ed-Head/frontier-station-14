@@ -1,0 +1,17 @@
+- type: entity
+  id: CrateSyndicateTelecrystals
+  parent: CrateSyndicate
+  name: Telecrystal Crate
+  description: A crate containing some telecrystals.
+  components:
+  - type: StorageFill
+    contents:
+      - id: Telecrystal5
+        prob: .80
+        orGroup: TC
+      - id: Telecrystal10
+        prob: .16
+        orGroup: TC
+      - id: Telecrystal
+        prob: .04
+        orGroup: TC

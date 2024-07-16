@@ -149,10 +149,10 @@ entities:
           - 0
           - 0
         - volume: 2500
-          temperature: 293.14996
+          temperature: 293.1499
           moles:
-          - 20.078888
-          - 75.53487
+          - 18.472576
+          - 69.49208
           - 0
           - 0
           - 0
@@ -293,15 +293,6 @@ entities:
     - type: Transform
       pos: 1.5,6.5
       parent: 1
-- proto: ClothingBackpackDuffelSyndicateTelecrystalLoot
-  entities:
-  - uid: 86
-    components:
-    - type: Transform
-      parent: 66
-    - type: Physics
-      canCollide: False
-    - type: InsideEntityStorage
 - proto: ConveyorBelt
   entities:
   - uid: 45
@@ -314,42 +305,13 @@ entities:
     - type: Transform
       pos: 1.5,1.5
       parent: 1
-- proto: CrateSyndicate
+- proto: CrateSyndicateTelecrystals
   entities:
   - uid: 66
     components:
     - type: Transform
       pos: 0.5,5.5
       parent: 1
-    - type: EntityStorage
-      air:
-        volume: 200
-        immutable: False
-        temperature: 293.14923
-        moles:
-        - 1.7459903
-        - 6.568249
-        - 0
-        - 0
-        - 0
-        - 0
-        - 0
-        - 0
-        - 0
-        - 0
-        - 0
-        - 0
-    - type: ContainerContainer
-      containers:
-        entity_storage: !type:Container
-          showEnts: False
-          occludes: True
-          ents:
-          - 86
-        paper_label: !type:ContainerSlot
-          showEnts: False
-          occludes: True
-          ent: null
 - proto: DebugAPC
   entities:
   - uid: 49
