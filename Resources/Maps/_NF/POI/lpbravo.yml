@@ -2539,6 +2539,13 @@ entities:
       rot: -1.5707963267948966 rad
       pos: -1.5,-3.5
       parent: 1
+- proto: ComputerContrabandCargoOrders
+  entities:
+  - uid: 176
+    components:
+    - type: Transform
+      pos: 1.5,4.5
+      parent: 1
 - proto: ComputerIFFPOI
   entities:
   - uid: 502
@@ -2571,6 +2578,14 @@ entities:
     - type: Transform
       rot: 3.141592653589793 rad
       pos: -1.5,2.5
+      parent: 1
+- proto: ComputerStationRecords
+  entities:
+  - uid: 452
+    components:
+    - type: Transform
+      rot: 3.141592653589793 rad
+      pos: -2.5,2.5
       parent: 1
 - proto: DisposalUnit
   entities:
@@ -2615,6 +2630,8 @@ entities:
     - type: Transform
       pos: 2.5,4.5
       parent: 1
+    - type: DeadDrop
+      nextDrop: 2138.8055014
 - proto: Firelock
   entities:
   - uid: 494
@@ -3305,26 +3322,6 @@ entities:
       bodyType: Static
 - proto: PaperOffice
   entities:
-  - uid: 179
-    components:
-    - type: Transform
-      pos: 1.4473114,4.7084312
-      parent: 1
-  - uid: 180
-    components:
-    - type: Transform
-      pos: 1.4785614,4.4896812
-      parent: 1
-  - uid: 181
-    components:
-    - type: Transform
-      pos: 1.5879364,4.7240562
-      parent: 1
-  - uid: 182
-    components:
-    - type: Transform
-      pos: 1.7285614,4.4896812
-      parent: 1
   - uid: 323
     components:
     - type: Transform
@@ -3779,7 +3776,7 @@ entities:
   - uid: 178
     components:
     - type: Transform
-      pos: 1.3223114,4.6459312
+      pos: 2.0553732,4.4524508
       parent: 1
   - uid: 329
     components:
@@ -4006,6 +4003,30 @@ entities:
     - type: Transform
       pos: 5.5,-6.5
       parent: 1
+- proto: SpawnPointSyndicateBodyguard
+  entities:
+  - uid: 182
+    components:
+    - type: Transform
+      pos: -4.5,-2.5
+      parent: 1
+  - uid: 718
+    components:
+    - type: Transform
+      pos: -1.5,-3.5
+      parent: 1
+- proto: SpawnPointSyndicateBroker
+  entities:
+  - uid: 180
+    components:
+    - type: Transform
+      pos: 2.5,3.5
+      parent: 1
+  - uid: 181
+    components:
+    - type: Transform
+      pos: 6.5,-6.5
+      parent: 1
 - proto: SpawnVehicleAntagVehicle
   entities:
   - uid: 169
@@ -4056,16 +4077,6 @@ entities:
     - type: Transform
       pos: -6.5,-6.5
       parent: 1
-  - uid: 176
-    components:
-    - type: Transform
-      pos: 2.5,4.5
-      parent: 1
-  - uid: 177
-    components:
-    - type: Transform
-      pos: 1.5,4.5
-      parent: 1
   - uid: 188
     components:
     - type: Transform
@@ -4092,10 +4103,17 @@ entities:
     - type: Transform
       pos: -2.5,-3.5
       parent: 1
-  - uid: 452
+- proto: TableReinforced
+  entities:
+  - uid: 177
     components:
     - type: Transform
-      pos: -2.5,2.5
+      pos: 1.5,4.5
+      parent: 1
+  - uid: 179
+    components:
+    - type: Transform
+      pos: 2.5,4.5
       parent: 1
 - proto: TelecomServerFilledSyndicate
   entities:
@@ -4117,21 +4135,21 @@ entities:
   - uid: 453
     components:
     - type: Transform
-      pos: -2.6015956,2.503873
+      pos: -3.1804504,-2.2739391
       parent: 1
 - proto: VehicleKeySkeletonMotorcycle
   entities:
   - uid: 515
     components:
     - type: Transform
-      pos: -2.6974268,2.7199645
+      pos: -6.6975145,-6.413029
       parent: 1
 - proto: VehicleKeySyndicateSegway
   entities:
   - uid: 454
     components:
     - type: Transform
-      pos: -2.3828456,2.660123
+      pos: -6.803745,-6.2858315
       parent: 1
 - proto: VendingMachineSyndieContraband
   entities:

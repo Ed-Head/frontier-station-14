@@ -21,6 +21,17 @@
   - UplinkWeaponry
 
 - type: listing
+  id: DeathRattleImplanter
+  name: uplink-deathrattle-name
+  description: uplink-deathrattle-desc
+  icon: { sprite: "Objects/Specific/Medical/syndi_implanter.rsi", state: implanter0 }
+  productEntity: DeathRattleImplanter
+  cost:
+    Telecrystal: 1
+  categories:
+  - UplinkImplants
+
+- type: listing
   id: UplinkIFFFlatpack
   name: uplink-iff-flatpack-name
   description: uplink-iff-flatpack-desc
@@ -30,3 +41,14 @@
     Telecrystal: 4
   categories:
   - UplinkDeception
+
+- type: listing
+  id: UplinkAmmoFabFlatpack
+  name: uplink-ammofab-flatpack-name
+  description: uplink-ammofab-flatpack-desc
+  icon: { sprite: /Textures/Objects/Misc/module.rsi, state: security }
+  productEntity: AmmoTechFabFlatpack
+  cost:
+    Telecrystal: 4
+  categories:
+  - UplinkAmmo

@@ -74,13 +74,70 @@ public sealed class DeadDropSystem : EntitySystem
     }
 
     //spawning the dead drop.
-    private bool SendDeadDrop(EntityUid uid, DeadDropComponent component, EntityUid user, HandsComponent hands)
+    private void SendDeadDrop(EntityUid uid, DeadDropComponent component, EntityUid user, HandsComponent hands)
     {
         //simple check to make sure we dont allow multiple activations from a desynced verb window.
-        if (_timing.CurTime < component.NextDrop && HasComp<FaxMachineComponent>(uid) == false)
-            return false;
+        if (_timing.CurTime < component.NextDrop)
+            return;
 
         //relying entirely on shipyard capabilities, including using the shipyard map to spawn the items and ftl to bring em in
+        if (_shipyard.ShipyardMap is not MapId shipyardMap)
+            return;
+
+        var options = new MapLoadOptions
+        {
+            LoadMap = false,
+        };
+
+        //load whatever grid was specified on the component, either a special dead drop or default
+        if (!_map.TryLoad(shipyardMap, component.DropGrid, out var gridUids, options))
+            return;
+
+        //setup the radar properties
+        _shuttle.SetIFFColor(gridUids[0], component.Color);
+        _shuttle.AddIFFFlag(gridUids[0], IFFFlags.HideLabel);
+
+        //this is where we set up all the information that FTL is going to need, including a new null entitiy as a destination target because FTL needs it for reasons?
+        //dont ask me im just fulfilling FTL requirements.
+        var dropLocation = _random.NextVector2(component.MinimumDistance, component.MaximumDistance);
+        var mapId = Transform(user).MapID;
+        var mapUid = _mapManager.GetMapEntityId(mapId);
+
+        if (TryComp<ShuttleComponent>(gridUids[0], out var shuttle))
+        {
+            _shuttle.FTLToCoordinates(gridUids[0], shuttle, new EntityCoordinates(mapUid, dropLocation), 0f, 0f, 35f);
+        }
+
+        //tattle on the smuggler here, but obfuscate it a bit if possible to just the grid it was summoned from.
+        var channel = _prototypeManager.Index<RadioChannelPrototype>("Nfsd");
+        var sender = Transform(user).GridUid ?? uid;
+
+        _radio.SendRadioMessage(sender, Loc.GetString("deaddrop-security-report"), channel, uid);
+        _adminLogger.Add(LogType.Action, LogImpact.Medium, $"{ToPrettyString(user)} sent a dead drop to {dropLocation.ToString()} from {ToPrettyString(uid)} at {Transform(uid).Coordinates.ToString()}");
+
+        // here we are just building a string for the hint paper so that it looks pretty and RP-like on the paper itself.
+        var dropHint = new StringBuilder();
+        dropHint.AppendLine(Loc.GetString("deaddrop-hint-pretext"));
+        dropHint.AppendLine();
+        dropHint.AppendLine(dropLocation.ToString());
+        dropHint.AppendLine();
+        dropHint.AppendLine(Loc.GetString("deaddrop-hint-posttext"));
+
+        var paper = EntityManager.SpawnEntity(component.HintPaper, Transform(uid).Coordinates);
+
+        _paper.SetContent(paper, dropHint.ToString());
+        _meta.SetEntityName(paper, Loc.GetString("deaddrop-hint-name"));
+        _meta.SetEntityDescription(paper, Loc.GetString("deaddrop-hint-desc"));
+        _hands.PickupOrDrop(user, paper, handsComp: hands);
+
+        //reset the timer
+        component.NextDrop = _timing.CurTime + TimeSpan.FromSeconds(_random.Next(component.MinimumCoolDown, component.MaximumCoolDown));
+    }
+
+//Keeping printing faxs and finding them behind posters in different methods to reduce clutter
+    private bool FaxDeadDrop(EntityUid uid, DeadDropComponent component)
+    {
+ //relying entirely on shipyard capabilities, including using the shipyard map to spawn the items and ftl to bring em in
         if (_shipyard.ShipyardMap is not MapId shipyardMap)
             return false;
 
@@ -108,11 +165,10 @@ public sealed class DeadDropSystem : EntitySystem
             _shuttle.FTLToCoordinates(gridUids[0], shuttle, new EntityCoordinates(mapUid, dropLocation), 0f, 0f, 35f);
         }
 
-        //tattle on the smuggler here, but obfuscate it a bit if possible to just the grid it was summoned from.
+        //tattle on the smuggler here, more obfuscated than grabbing from a poster. Not sure if that will be confusing for people.
         var channel = _prototypeManager.Index<RadioChannelPrototype>("Nfsd");
-        var sender = Transform(uid).GridUid ?? uid;
 
-        _radio.SendRadioMessage(sender, Loc.GetString("deaddrop-security-report"), channel, uid);
+        _radio.SendRadioMessage(uid, Loc.GetString("deaddrop-security-report"), channel, uid);
 
         // here we are just building a string for the hint paper so that it looks pretty and RP-like on the paper itself.
         var dropHint = new StringBuilder();
@@ -121,36 +177,17 @@ public sealed class DeadDropSystem : EntitySystem
         dropHint.AppendLine(dropLocation.ToString());
         dropHint.AppendLine();
         dropHint.AppendLine(Loc.GetString("deaddrop-hint-posttext"));
-        var printout = new FaxPrintout(dropHint.ToString(),Loc.GetString("deaddrop-hint-name"),null,null);
-        var isFax = HasComp<FaxMachineComponent>(uid);
-        if (isFax == true)
-        {
-            _faxSystem.Receive(uid,printout,null,null);
-            _adminLogger.Add(LogType.Action, LogImpact.Medium, $"sent a dead drop to {dropLocation.ToString()} from {ToPrettyString(uid)} at {Transform(uid).Coordinates.ToString()}");
-        }
-        else
-        {
-            var paper = EntityManager.SpawnEntity(component.HintPaper, Transform(uid).Coordinates);
+        _faxSystem.Receive(
+        uid,
+        new FaxPrintout(dropHint.ToString(),
+        Loc.GetString("deaddrop-hint-name")));
 
-            _paper.SetContent(paper, dropHint.ToString());
-            _meta.SetEntityName(paper, Loc.GetString("deaddrop-hint-name"));
-            _meta.SetEntityDescription(paper, Loc.GetString("deaddrop-hint-desc"));
-            _hands.PickupOrDrop(user, paper, handsComp: hands);
-            _adminLogger.Add(LogType.Action, LogImpact.Medium, $"{ToPrettyString(user)} sent a dead drop to {dropLocation.ToString()} from {ToPrettyString(uid)} at {Transform(uid).Coordinates.ToString()}");
-
-        }
-        //reset the timer
-        component.NextDrop = _timing.CurTime + TimeSpan.FromSeconds(_random.Next(component.MinimumCoolDown, component.MaximumCoolDown));
+        _adminLogger.Add(LogType.Action, LogImpact.Medium, $"sent a dead drop to {dropLocation.ToString()} from {ToPrettyString(uid)} at {Transform(uid).Coordinates.ToString()}");
         return true;
     }
-
     private void OnDeadDropPrinterUsed(EntityUid uid, DeadDropComponent comp, ref GotDropPrintedEvent args)
-    {   TryComp<HandsComponent>(args.UserUid, out var hands);
-        if (hands == null || HasComp<FaxMachineComponent>(args.TargetUid) == false)
-        {
-            return;
-        }
-        args.Handled = SendDeadDrop(args.TargetUid, comp, uid, hands);
+    {
+        args.Handled = FaxDeadDrop(args.TargetUid, comp);
     }
 
 }

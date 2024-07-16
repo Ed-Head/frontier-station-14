@@ -52,6 +52,25 @@
     - type: Transform
 
 - type: entity
+  id: SyndicateFrontierOutpost
+  parent:
+    - BaseStation
+    - BaseStationJobsSpawning
+    - BaseStationCargo
+    - BaseStationSiliconLawFrontierSyndicate
+    - BaseStationRecords
+  noSpawn: true
+  components:
+    - type: Transform
+
+- type: entity
+  id: BaseStationSiliconLawFrontierSyndicate
+  abstract: true
+  components:
+  - type: SiliconLawProvider
+    laws: SyndicateStatic
+
+- type: entity
   id: StandardFrontierVessel
   parent:
     - BaseStation

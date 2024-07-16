@@ -27,6 +27,6 @@ public sealed partial class EmagComponent : Component
     /// <summary>
     // Frontier - Print Dead Drops from supported Fax Machines
     /// </sumary>
-    [DataField("dropprinter")]
+    [DataField]
     public bool DropPrinter = false;
 }

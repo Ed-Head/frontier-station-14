@@ -11,7 +11,7 @@
   alwaysUseSpawner: true
   hideConsoleVisibility: true
   canBeAntag: true
-  icon: "JobIconMercenary"
+  icon: "JobIconSyndicate"
   supervisors: job-supervisors-syndicate-bodyguard
   setPreference: true
   accessGroups:

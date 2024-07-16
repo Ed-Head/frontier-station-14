@@ -70,6 +70,13 @@
 
 - type: statusIcon
   parent: JobIcon
+  id: JobIconSyndicate
+  icon:
+    sprite: /Textures/Interface/Misc/job_icons.rsi
+    state: Syndicate
+
+- type: statusIcon
+  parent: JobIcon
   id: JobIconValet
   icon:
     sprite: /Textures/_NF/Interface/Misc/job_icons.rsi

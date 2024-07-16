@@ -61,7 +61,7 @@ public sealed class EmagSystem : EntitySystem
         if (comp.Demag)
             handled = DoUnEmagEffect(user, target);
         else if (comp.DropPrinter)
-            handled = GotDropPrintedEffect(user, target);
+            handled = GotDropPrintedEffect(target);
         else
             handled = DoEmagEffect(user, target);
         if (!handled)
@@ -118,11 +118,11 @@ public sealed class EmagSystem : EntitySystem
         return unEmaggedEvent.Handled;
     }
     /// <summary>
-    /// Frontier - Sends the signal to print dead drops from fax machines with the deaddrop component
+    /// #Frontier - Sends the signal to print dead drops from fax machines with the deaddrop component
     /// </summary>
-    public bool GotDropPrintedEffect(EntityUid user, EntityUid target)
+    public bool GotDropPrintedEffect(EntityUid target)
     {
-        var dropPrintEvent = new GotDropPrintedEvent(user, target);
+        var dropPrintEvent = new GotDropPrintedEvent(target);
         RaiseLocalEvent(target, ref dropPrintEvent);
         return dropPrintEvent.Handled;
     }
@@ -137,5 +137,5 @@ public record struct OnAttemptEmagEvent(EntityUid UserUid, bool Handled = false)
 [ByRefEvent]
 public record struct GotUnEmaggedEvent(EntityUid UserUid, bool Handled = false, bool Repeatable = false); // Frontier
 [ByRefEvent]
-public record struct GotDropPrintedEvent(EntityUid UserUid, EntityUid TargetUid, bool Handled = false, bool Repeatable = true); // Frontier
+public record struct GotDropPrintedEvent(EntityUid TargetUid, bool Handled = false, bool Repeatable = true); // Frontier
 
