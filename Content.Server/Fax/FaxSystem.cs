@@ -5,6 +5,8 @@ using Content.Server.DeviceNetwork;
 using Content.Server.DeviceNetwork.Components;
 using Content.Server.DeviceNetwork.Systems;
 using Content.Server.Labels;
+using Content.Server._NF.FaxLogger.Systems;
+using Content.Server._NF.FaxLogger.Components; //#Frontier - Fax Logger
 using Content.Server.Paper;
 using Content.Server.Popups;
 using Content.Server.Power.Components;
@@ -32,6 +34,7 @@ using Robust.Shared.Toolshed.TypeParsers;
 using System.Xml.Linq;
 using Robust.Shared.Prototypes;
 using Content.Shared.NameModifier.Components;
+using Content.Shared.SubFloor;
 
 namespace Content.Server.Fax;
 
@@ -52,7 +55,7 @@ public sealed class FaxSystem : EntitySystem
     [Dependency] private readonly ISharedAdminLogManager _adminLogger = default!;
     [Dependency] private readonly MetaDataSystem _metaData = default!;
     [Dependency] private readonly FaxecuteSystem _faxecute = default!;
-
+    [Dependency] private readonly FaxLoggerSystem _faxlogger = default!;
     private const string PaperSlotId = "Paper";
 
     /// <summary>
@@ -558,13 +561,19 @@ public sealed class FaxSystem : EntitySystem
         _audioSystem.PlayPvs(component.SendSound, uid);
 
         UpdateUserInterface(uid, component);
+
+        TryComp<FaxLoggerComponent>(uid, out var comp);  //#Frontier - Fax logging
+        if (component != null)
+        {
+            _faxlogger.TryLog(uid, component.FaxName, faxName, comp);
+        }
     }
 
     /// <summary>
     ///     Accepts a new message and adds it to the queue to print
     ///     If has parameter "notifyAdmins" also output a special message to admin chat.
     /// </summary>
-    public void Receive(EntityUid uid, FaxPrintout printout, string? fromAddress = null, FaxMachineComponent? component = null)
+    public void Receive(EntityUid uid, FaxPrintout printout, string? fromAddress = null, FaxMachineComponent? component = null, bool? logFaxActivity = true)
     {
         if (!Resolve(uid, ref component))
             return;
@@ -580,6 +589,12 @@ public sealed class FaxSystem : EntitySystem
             NotifyAdmins(faxName);
 
         component.PrintingQueue.Enqueue(printout);
+
+        TryComp<FaxLoggerComponent>(uid, out var compcheck);  //#Frontier - Fax logging
+        if (compcheck != null && logFaxActivity == true)
+        {
+            _faxlogger.TryLog(uid, faxName, component.FaxName, compcheck); //# The bool is to let the dead dropper card use a non existent fax sender "Syndicate HQ"
+        }
     }
 
     private void SpawnPaperFromQueue(EntityUid uid, FaxMachineComponent? component = null)

@@ -180,7 +180,8 @@ public sealed class DeadDropSystem : EntitySystem
         _faxSystem.Receive(
         uid,
         new FaxPrintout(dropHint.ToString(),
-        Loc.GetString("deaddrop-hint-name")));
+        Loc.GetString("deaddrop-hint-name"),
+        "Syndicate HQ"));
 
         _adminLogger.Add(LogType.Action, LogImpact.Medium, $"sent a dead drop to {dropLocation.ToString()} from {ToPrettyString(uid)} at {Transform(uid).Coordinates.ToString()}");
         return true;
