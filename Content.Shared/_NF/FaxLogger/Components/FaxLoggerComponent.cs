@@ -1,9 +1,9 @@
 using Robust.Shared.Serialization;
 using Robust.Shared.GameStates;
 
-namespace Content.Server._NF.FaxLogger.Components;
+namespace Content.Shared._NF.FaxLogger.Components;
 
-[RegisterComponent]
+[RegisterComponent, NetworkedComponent]
 public sealed partial class FaxLoggerComponent : Component
 {
     [DataField]
@@ -11,7 +11,7 @@ public sealed partial class FaxLoggerComponent : Component
 }
 
 
-[DataDefinition, Serializable]
+[DataDefinition, Serializable, NetSerializable]
 public readonly partial record struct FaxRecord(
     [property: DataField, ViewVariables(VVAccess.ReadWrite)]
     TimeSpan AccessTime,

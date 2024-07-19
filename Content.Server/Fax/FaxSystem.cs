@@ -5,8 +5,8 @@ using Content.Server.DeviceNetwork;
 using Content.Server.DeviceNetwork.Components;
 using Content.Server.DeviceNetwork.Systems;
 using Content.Server.Labels;
-using Content.Server._NF.FaxLogger.Systems;
-using Content.Server._NF.FaxLogger.Components; //#Frontier - Fax Logger
+using Content.Shared._NF.FaxLogger.Systems;     //#Frontier - Fax Logger
+using Content.Shared._NF.FaxLogger.Components; //#Frontier - Fax Logger
 using Content.Server.Paper;
 using Content.Server.Popups;
 using Content.Server.Power.Components;
@@ -562,7 +562,8 @@ public sealed class FaxSystem : EntitySystem
 
         UpdateUserInterface(uid, component);
 
-        TryComp<FaxLoggerComponent>(uid, out var comp);  //#Frontier - Fax logging
+        //#Frontier - FaxLogger
+        TryComp<FaxLoggerComponent>(uid, out var comp);
         if (component != null)
         {
             _faxlogger.TryLog(uid, component.FaxName, faxName, comp);
@@ -572,8 +573,9 @@ public sealed class FaxSystem : EntitySystem
     /// <summary>
     ///     Accepts a new message and adds it to the queue to print
     ///     If has parameter "notifyAdmins" also output a special message to admin chat.
+    ///     #Frontier |  fromAddressOverride is so non-existant faxes can still 'send' a message and be logged
     /// </summary>
-    public void Receive(EntityUid uid, FaxPrintout printout, string? fromAddress = null, FaxMachineComponent? component = null, bool? logFaxActivity = true)
+    public void Receive(EntityUid uid, FaxPrintout printout, string? fromAddress = null, FaxMachineComponent? component = null, bool? fromAddressOverride = false)
     {
         if (!Resolve(uid, ref component))
             return;
@@ -581,7 +583,10 @@ public sealed class FaxSystem : EntitySystem
         var faxName = Loc.GetString("fax-machine-popup-source-unknown");
         if (fromAddress != null && component.KnownFaxes.TryGetValue(fromAddress, out var fax)) // If message received from unknown fax address
             faxName = fax;
-
+        if (fromAddress != null && fromAddressOverride == true)
+        {
+            faxName = fromAddress; //#Frontier - FaxLogger
+        }
         _popupSystem.PopupEntity(Loc.GetString("fax-machine-popup-received", ("from", faxName)), uid);
         _appearanceSystem.SetData(uid, FaxMachineVisuals.VisualState, FaxMachineVisualState.Printing);
 
@@ -590,10 +595,11 @@ public sealed class FaxSystem : EntitySystem
 
         component.PrintingQueue.Enqueue(printout);
 
-        TryComp<FaxLoggerComponent>(uid, out var compcheck);  //#Frontier - Fax logging
-        if (compcheck != null && logFaxActivity == true)
+        //#Frontier - FaxLogger
+        TryComp<FaxLoggerComponent>(uid, out var compcheck);
+        if (compcheck != null)
         {
-            _faxlogger.TryLog(uid, faxName, component.FaxName, compcheck); //# The bool is to let the dead dropper card use a non existent fax sender "Syndicate HQ"
+            _faxlogger.TryLog(uid, faxName, component.FaxName, compcheck);
         }
     }
 

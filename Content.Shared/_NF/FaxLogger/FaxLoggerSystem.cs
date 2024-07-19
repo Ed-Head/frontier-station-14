@@ -1,9 +1,9 @@
-using Content.Server._NF.FaxLogger.Components;
+using Content.Shared._NF.FaxLogger.Components;
 using Content.Shared.GameTicking;
 using Robust.Shared.Timing;
 using Robust.Shared.GameStates;
 
-namespace Content.Server._NF.FaxLogger.Systems;
+namespace Content.Shared._NF.FaxLogger.Systems;
 
 public sealed class FaxLoggerSystem : EntitySystem
 {

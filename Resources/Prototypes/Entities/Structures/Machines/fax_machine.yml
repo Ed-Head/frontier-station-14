@@ -31,6 +31,7 @@
 #        layer: # Frontier
 #        - TabletopMachineLayer # Frontier
 #        - LowImpassable # Frontier
+  - type: FaxLogger # Frontier
   - type: ActivatableUI
     key: enum.FaxUiKey.Key
   - type: ActivatableUIRequiresPower
